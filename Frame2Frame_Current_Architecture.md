@@ -16,7 +16,7 @@ Frame2Frame (SKD AuditBook 2.0) is a multi-tenant SaaS platform for event produc
 ### 1. Database & Multi-Tenancy
 - **Supabase PostgreSQL:** Uses a relational schema with a strong emphasis on multi-tenancy.
 - **Tenant Isolation:** Every table includes a `tenant_id`. The backend currently defaults to a single tenant ("SKD Studios") but is architected for expansion.
-- **RLS (Row Level Security):** Enabled on Supabase, but bypassed by the backend using the `SUPABASE_SERVICE_ROLE_KEY` to act as a secure proxy.
+- **RLS (Row Level Security):** Enabled on Supabase, but bypassed by the backend using the `SUPABASE_SECRET_KEY` to act as a secure proxy.
 
 ### 2. Backend (Express + TypeScript)
 - **Typed Routes:** All routes under `/api/`. Core modules: `clients`, `events`, `team`, `dashboard`.
