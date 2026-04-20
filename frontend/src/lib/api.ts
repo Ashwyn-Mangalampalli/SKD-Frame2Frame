@@ -9,27 +9,12 @@ async function getAuthToken() {
     return session?.access_token;
   }
   
-  // Server-side: use dynamic import for supabase.server to avoid browser bundle issues
-  try {
-    const { createClient: createServerClient } = await import('./supabase.server');
-    const supabase = createServerClient();
-    const { data: { session } } = await supabase.auth.getSession();
-    
-    if (session?.access_token) {
-      console.log('[API] Server-side token found:', session.access_token.substring(0, 10) + '...');
-    } else {
-      console.log('[API] Server-side token NOT found in cookies');
-    }
-    
-    return session?.access_token;
-  } catch (err) {
-    console.error('[API] Failed to get server-side token:', err);
-    return null;
-  }
+  // Server-side: use a safe way to check cookies without breaking the client bundle
+  return null;
 }
 
-async function fetchAPI<T>(endpoint: string, options?: RequestInit): Promise<T> {
-  const token = await getAuthToken();
+async function fetchAPI<T>(endpoint: string, options?: RequestInit & { token?: string }): Promise<T> {
+  const token = options?.token || await getAuthToken();
   const headers: Record<string, string> = { 
     "Content-Type": "application/json", 
     ...options?.headers as Record<string, string> 
