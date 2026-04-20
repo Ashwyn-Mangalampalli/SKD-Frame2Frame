@@ -217,7 +217,7 @@ export interface TenantResponse {
 // ── API methods ─────────────────────────────────────────────
 
 export const api = {
-  dashboard: () => fetchAPI<DashboardResponse>("/dashboard"),
+  dashboard: (token?: string) => fetchAPI<DashboardResponse>("/dashboard", { token }),
   search: (q: string) => fetchAPI<SearchResponse>(`/search?q=${encodeURIComponent(q)}`),
 
   clients: {

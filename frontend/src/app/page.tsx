@@ -8,6 +8,7 @@ import {
   Clock,
   ArrowRight,
 } from "lucide-react";
+import Link from "next/link";
 import { api, DashboardResponse } from "@/lib/api";
 import { createClient } from "@/lib/supabase.server";
 import { formatCurrency, getEventTypeColor, cn } from "@/lib/utils";
