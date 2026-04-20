@@ -1,4 +1,4 @@
-name: Sync to SKD Organization
+name: Sync to SKD Photo Studio's Frame2Frame
 
 on:
   push:
@@ -17,5 +17,5 @@ jobs:
 
       - name: Push to SKD
         run: |
-          git remote add skd https://x-access-token:${{ secrets.SKD_GITHUB_TOKEN }}@github.com/SKD-Photo-Studio/Frame2Frame.git
+          git remote add skd https://${{ github.actor }}:${{ secrets.SKD_PHOTO_STUDIO_REPO_TOKEN }}@github.com/SKD-Photo-Studio/Frame2Frame.git
           git push skd main --force
