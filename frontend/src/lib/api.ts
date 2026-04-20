@@ -3,14 +3,22 @@ import { createClient as createBrowserClient } from "./supabase.client";
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5001/api";
 
 async function getAuthToken() {
-  // If we're on the server, we might need a different approach, 
-  // but for now, we'll focus on client-side requests which is where most 'api.' calls happen in this app.
   if (typeof window !== 'undefined') {
     const supabase = createBrowserClient();
     const { data: { session } } = await supabase.auth.getSession();
     return session?.access_token;
   }
-  return null;
+  
+  // Server-side: use dynamic import for supabase.server to avoid browser bundle issues
+  try {
+    const { createClient: createServerClient } = await import('./supabase.server');
+    const supabase = createServerClient();
+    const { data: { session } } = await supabase.auth.getSession();
+    return session?.access_token;
+  } catch (err) {
+    console.error('Failed to get server-side token:', err);
+    return null;
+  }
 }
 
 async function fetchAPI<T>(endpoint: string, options?: RequestInit): Promise<T> {
