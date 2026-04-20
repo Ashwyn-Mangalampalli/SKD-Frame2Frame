@@ -10,10 +10,15 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { api, DashboardResponse } from "@/lib/api";
+import { createClient } from "@/lib/supabase.server";
 import { formatCurrency, getEventTypeColor, cn } from "@/lib/utils";
 
 export default async function DashboardPage() {
-  const data: DashboardResponse = await api.dashboard();
+  const supabase = createClient();
+  const { data: { session } } = await supabase.auth.getSession();
+  const token = session?.access_token;
+  
+  const data: DashboardResponse = await api.dashboard(token);
 
   return (
     <div>

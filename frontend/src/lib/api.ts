@@ -13,8 +13,8 @@ async function getAuthToken() {
   return null;
 }
 
-async function fetchAPI<T>(endpoint: string, options?: RequestInit): Promise<T> {
-  const token = await getAuthToken();
+async function fetchAPI<T>(endpoint: string, options?: RequestInit & { token?: string }): Promise<T> {
+  const token = options?.token || await getAuthToken();
   const headers: Record<string, string> = { 
     "Content-Type": "application/json", 
     ...options?.headers as Record<string, string> 
@@ -217,7 +217,7 @@ export interface TenantResponse {
 // ── API methods ─────────────────────────────────────────────
 
 export const api = {
-  dashboard: () => fetchAPI<DashboardResponse>("/dashboard"),
+  dashboard: (token?: string) => fetchAPI<DashboardResponse>("/dashboard", { token }),
   search: (q: string) => fetchAPI<SearchResponse>(`/search?q=${encodeURIComponent(q)}`),
 
   clients: {
