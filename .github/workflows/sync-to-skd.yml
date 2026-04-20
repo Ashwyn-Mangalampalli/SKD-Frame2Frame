@@ -8,25 +8,23 @@ on:
 jobs:
   repo-sync:
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
+      # Updated to v6 to natively support Node 24 and stop the warning spam
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push to SKD
         env:
           SKD_TOKEN: ${{ secrets.SKD_PHOTO_STUDIO_REPO_TOKEN }}
         run: |
-          # 1. Remove the old remote if it exists (prevents "remote already exists" errors)
+          # 1. Clean up potential old remote
           git remote remove skd || true
 
-          # 2. Add the remote with the token embedded in the URL
-          # Format: https://x-access-token:TOKEN@github.com/ORG/REPO.git
+          # 2. Add remote with token (Ensure the Org/Repo name is exactly as it appears in the URL)
+          # Note: If the repo name has spaces, use the URL version (e.g., Frame2Frame)
           git remote add skd "https://x-access-token:${SKD_TOKEN}@github.com/SKD-Photo-Studio/Frame2Frame.git"
 
-          # 3. Explicitly push the main branch
+          # 3. Push
           git push skd main --force
