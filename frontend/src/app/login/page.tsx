@@ -8,7 +8,7 @@ import { LogIn, Mail, Lock, AlertCircle, Loader2 } from 'lucide-react'
 function LoginFormContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const returnTo = searchParams.get('returnTo') || '/dashboard'
+  const returnTo = searchParams.get('returnTo') || '/'
   const supabase = createClient()
 
   const [email, setEmail] = useState('')
