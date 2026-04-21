@@ -19,7 +19,7 @@ const DEFAULT_EVENT_TYPES = [
   "Maternity",
 ];
 
-export default function AddEventButton() {
+export default function AddEventButton({ initialClientId }: { initialClientId?: string }) {
   const [open, setOpen] = useState(false);
 
   return (
@@ -32,13 +32,13 @@ export default function AddEventButton() {
         New Event
       </button>
       <Modal open={open} onClose={() => setOpen(false)} title="Create New Event">
-        <AddEventForm onSuccess={() => setOpen(false)} />
+        <AddEventForm onSuccess={() => setOpen(false)} initialClientId={initialClientId} />
       </Modal>
     </>
   );
 }
 
-function AddEventForm({ onSuccess }: { onSuccess: () => void }) {
+function AddEventForm({ onSuccess, initialClientId }: { onSuccess: () => void; initialClientId?: string }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -48,7 +48,7 @@ function AddEventForm({ onSuccess }: { onSuccess: () => void }) {
   });
   
   const [dates, setDates] = useState<Date[]>([]);
-  const [clientId, setClientId] = useState("");
+  const [clientId, setClientId] = useState(initialClientId || "");
   const [eventType, setEventType] = useState("");
   const [venue, setVenue] = useState("");
   const [city, setCity] = useState("");

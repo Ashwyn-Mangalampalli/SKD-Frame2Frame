@@ -4,6 +4,7 @@ import { api } from "@/lib/api";
 import { formatCurrency, getInitials, getEventTypeColor, cn } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import EditClientButton from "@/components/forms/edit-client-form";
+import AddEventButton from "@/components/forms/add-event-form";
 
 import { createClient } from "@/lib/supabase.server";
 
@@ -78,8 +79,9 @@ export default async function ClientDetailPage({
       </div>
 
       <div className="mt-5 sm:mt-6">
-        <div className="mb-3 flex items-center justify-between sm:mb-4">
+        <div className="mb-3 flex flex-col gap-3 sm:mb-4 sm:flex-row sm:items-center sm:justify-between">
           <h2 className="section-title">Booked Events ({clientEvents.length})</h2>
+          <AddEventButton initialClientId={client.id} />
         </div>
 
         {clientEvents.length === 0 ? (
