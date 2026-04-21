@@ -214,6 +214,7 @@ export default async function EventDetailPage({
       </Section>
 
     </div>
+  );
 }
 
 function Section({ title, count, action, children }: { title: string; count: number; action: React.ReactNode; children: React.ReactNode }) {
