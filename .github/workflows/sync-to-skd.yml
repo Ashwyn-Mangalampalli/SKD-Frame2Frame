@@ -8,26 +8,36 @@ on:
 jobs:
   repo-sync:
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
-      # Updated to v6 to natively support Node 24 and stop the warning spam
       - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          # Disable credential persistence to allow the sync step to use our PAT
+          persist-credentials: false
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
 
       - name: Push to SKD
         env:
           SKD_TOKEN: ${{ secrets.SKD_PHOTO_STUDIO_REPO_TOKEN }}
         run: |
-          # 1. Clean up potential old remote
+          # 1. Verify token exists
+          if [ -z "$SKD_TOKEN" ]; then
+            echo "Error: SKD_PHOTO_STUDIO_REPO_TOKEN is not set in secrets."
+            exit 1
+          fi
+
+          # 2. Clean up potential old remote
           git remote remove skd || true
 
-          # 2. Add remote with token (Ensure the Org/Repo name is exactly as it appears in the URL)
-          # Note: If the repo name has spaces, use the URL version (e.g., Frame2Frame)
+          # 3. Add remote with token
+          # We use the token directly in the URL to override any global credentials
           git remote add skd "https://x-access-token:${SKD_TOKEN}@github.com/SKD-Photo-Studio/Frame2Frame.git"
 
-          # 3. Explicitly push the main branch
+          # 4. Explicitly push the main branch
+          # Using --force to ensure the mirror is 1:1 with origin
           git push skd main --force
