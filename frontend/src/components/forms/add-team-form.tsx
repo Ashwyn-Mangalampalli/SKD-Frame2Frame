@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 import Modal from "@/components/ui/modal";
-import { api } from "@/lib/api";
+import { api, TeamListItem } from "@/lib/api";
 
 const ROLES = [
   "Traditional Photographer",
@@ -36,7 +36,7 @@ export default function AddTeamMemberButton() {
   );
 }
 
-function AddTeamMemberForm({ onSuccess }: { onSuccess: () => void }) {
+export function AddTeamMemberForm({ onSuccess }: { onSuccess: (m?: TeamListItem) => void }) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -60,9 +60,9 @@ function AddTeamMemberForm({ onSuccess }: { onSuccess: () => void }) {
     }
 
     try {
-      await api.team.create(data);
+      const newMember = await api.team.create(data);
       router.refresh();
-      onSuccess();
+      onSuccess(newMember);
     } catch {
       setError("Failed to add team member. Please try again.");
     } finally {

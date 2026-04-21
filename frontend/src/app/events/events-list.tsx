@@ -80,12 +80,17 @@ export default function EventsList({ initialEvents }: { initialEvents: EventWith
                     <p className="text-[11px] font-semibold text-gray-900 sm:text-xs">{formatCurrency(event.package_value)}</p>
                   </div>
                   <div>
-                    <p className="text-[9px] font-medium uppercase text-gray-400 sm:text-[10px]">Collected</p>
-                    <p className="text-[11px] font-semibold text-emerald-600 sm:text-xs">{formatCurrency(event.total_collected)}</p>
+                    <p className="text-[9px] font-medium uppercase text-gray-400 sm:text-[10px]">Expenses</p>
+                    <p className="text-[11px] font-semibold text-rose-600 sm:text-xs">{formatCurrency(event.total_expenses)}</p>
                   </div>
                   <div>
-                    <p className="text-[9px] font-medium uppercase text-gray-400 sm:text-[10px]">Due</p>
-                    <p className="text-[11px] font-semibold text-amber-600 sm:text-xs">{formatCurrency(event.client_balance)}</p>
+                    <p className="text-[9px] font-medium uppercase text-gray-400 sm:text-[10px]">Savings</p>
+                    <p className={cn(
+                      "text-[11px] font-semibold sm:text-xs",
+                      event.savings >= 0 ? "text-emerald-600" : "text-rose-600"
+                    )}>
+                      {formatCurrency(event.savings)}
+                    </p>
                   </div>
                 </div>
               </div>

@@ -5,9 +5,20 @@ import { useRouter } from "next/navigation";
 import { Plus, User, BadgeCheck, Clock, CheckCircle } from "lucide-react";
 import Modal from "@/components/ui/modal";
 import { api, TeamListItem } from "@/lib/api";
+import { Combobox } from "@/components/ui/combobox";
+import { AddTeamMemberForm } from "./add-team-form";
+import { cn } from "@/lib/utils";
 
-const DELIVERABLES = ["Reel", "Highlight", "Teaser", "Traditional Video", "Album", "Food & Travel", "Miscellaneous"];
-const ROLES = ["Editor", "Vendor"];
+const DELIVERABLES = [
+  "Traditional Video",
+  "Highlight",
+  "Teaser",
+  "Ceremony Long Film",
+  "Instagram Reel",
+  "Candid Photos",
+  "Traditional Photos",
+  "Photo Album",
+];
 
 export default function AddOutputExpenseButton({ eventId }: { eventId: string }) {
   const [open, setOpen] = useState(false);
@@ -29,14 +40,16 @@ function AddOutputExpenseForm({ eventId, onSuccess }: { eventId: string; onSucce
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [members, setMembers] = useState<TeamListItem[]>([]);
-  const [role, setRole] = useState("Editor");
   const [totalAmount, setTotalAmount] = useState(0);
   const [advancePaid, setAdvancePaid] = useState(0);
+  
+  const [role, setRole] = useState<"Editor" | "Vendor">("Editor");
+  const [userId, setUserId] = useState("");
+  const [deliverable, setDeliverable] = useState("");
+  const [showAddMember, setShowAddMember] = useState(false);
 
   useEffect(() => { 
-    api.team.list()
-      .then(setMembers)
-      .catch(() => {}); 
+    api.team.list().then(setMembers).catch(() => {}); 
   }, []);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -46,18 +59,18 @@ function AddOutputExpenseForm({ eventId, onSuccess }: { eventId: string; onSucce
 
     const fd = new FormData(e.currentTarget);
     const data = {
-      user_id: fd.get("user_id") as string,
+      user_id: userId,
       assignment_role: role,
-      deliverable: fd.get("deliverable") as string,
+      deliverable: deliverable,
       quantity: Number(fd.get("quantity")) || 1,
       total_amount: Number(fd.get("total_amount")) || 0,
       advance_paid: Number(fd.get("advance_paid")) || 0,
     };
 
-    if (!data.user_id || !data.deliverable) { 
-        setError("Member and deliverable are required."); 
-        setLoading(false); 
-        return; 
+    if (!data.user_id || !data.assignment_role || !data.deliverable) { 
+      setError("Member, role, and deliverable are required."); 
+      setLoading(false); 
+      return; 
     }
 
     try {
@@ -71,38 +84,59 @@ function AddOutputExpenseForm({ eventId, onSuccess }: { eventId: string; onSucce
     }
   }
 
-  return (
-    <form onSubmit={handleSubmit} className="space-y-6 pt-2">
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        {/* Team Member */}
-        <div>
-          <label className="mb-2 block text-sm font-semibold text-gray-700">Team Member *</label>
-          <div className="relative">
-            <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <select 
-              name="user_id" 
-              className="w-full rounded-xl border border-gray-200 pl-10 pr-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10 transition-all appearance-none bg-white"
-            >
-              <option value="">Select Member</option>
-              {members.map((m) => <option key={m.id} value={m.id}>{m.full_name}</option>)}
-            </select>
-          </div>
-        </div>
+  if (showAddMember) {
+    return (
+      <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <div className="mb-4 text-sm text-gray-500">Creating a new team member/vendor...</div>
+        <AddTeamMemberForm 
+          onSuccess={(newMember) => {
+            if (newMember) {
+              setMembers(prev => [...prev, newMember]);
+              setUserId(newMember.id);
+            }
+            setShowAddMember(false);
+          }} 
+        />
+      </div>
+    );
+  }
 
-        {/* Role Toggle */}
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="mb-2 block text-sm font-semibold text-gray-700">Role</label>
-          <div className="flex p-1 bg-gray-100 rounded-xl">
-            {ROLES.map((r) => (
+          <div className="mb-1.5 flex items-center justify-between">
+            <label className="block text-sm font-medium text-gray-700">Team Member *</label>
+            <button
+              type="button"
+              onClick={() => setShowAddMember(true)}
+              className="flex items-center gap-1 text-xs font-medium text-brand-600 hover:text-brand-700"
+            >
+              <Plus className="h-3 w-3" />
+              New
+            </button>
+          </div>
+          <Combobox
+            value={userId}
+            onChange={setUserId}
+            options={members.map((m) => ({ label: m.full_name, value: m.id }))}
+            placeholder="Search..."
+            onAddNew={() => setShowAddMember(true)}
+            addNewLabel="New Member"
+          />
+        </div>
+        <div>
+          <label className="mb-1.5 block text-sm font-medium text-gray-700">Type *</label>
+          <div className="flex p-1 bg-gray-100 rounded-lg">
+            {(["Editor", "Vendor"] as const).map((r) => (
               <button
                 key={r}
                 type="button"
                 onClick={() => setRole(r)}
-                className={`flex-1 flex items-center justify-center gap-2 py-2 text-xs font-medium rounded-lg transition-all ${
-                  role === r
-                    ? "bg-white text-gray-900 shadow-sm"
-                    : "text-gray-500 hover:text-gray-700"
-                }`}
+                className={cn(
+                  "flex-1 px-3 py-1.5 text-xs font-medium rounded-md transition-all sm:text-sm",
+                  role === r ? "bg-white text-brand-600 shadow-sm" : "text-gray-500 hover:text-gray-700"
+                )}
               >
                 {r}
               </button>
@@ -111,29 +145,20 @@ function AddOutputExpenseForm({ eventId, onSuccess }: { eventId: string; onSucce
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        {/* Deliverable */}
-        <div>
-          <label className="mb-2 block text-sm font-semibold text-gray-700">Deliverable *</label>
-          <select 
-            name="deliverable" 
-            className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10 transition-all bg-white"
-          >
-            <option value="">Select...</option>
-            {DELIVERABLES.map((d) => <option key={d} value={d}>{d}</option>)}
-          </select>
-        </div>
-
-        {/* Quantity */}
-        <div>
-          <label className="mb-2 block text-sm font-semibold text-gray-700">Quantity</label>
-          <input 
-            name="quantity" 
-            type="number" 
-            min="1" 
-            defaultValue="1" 
-            className="w-full rounded-xl border border-gray-200 px-4 py-2.5 text-sm focus:border-brand-500 focus:outline-none focus:ring-4 focus:ring-brand-500/10 transition-all" 
+      <div className="grid grid-cols-2 gap-4">
+        <div className="col-span-2 sm:col-span-1">
+          <label className="mb-1.5 block text-sm font-medium text-gray-700">Deliverable *</label>
+          <Combobox
+            value={deliverable}
+            onChange={setDeliverable}
+            options={DELIVERABLES.map(d => ({ label: d, value: d }))}
+            placeholder="Select or type..."
+            freeText={true}
           />
+        </div>
+        <div className="col-span-2 sm:col-span-1">
+          <label className="mb-1.5 block text-sm font-medium text-gray-700">Quantity</label>
+          <input name="quantity" type="number" min="1" defaultValue="1" className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500" />
         </div>
       </div>
 

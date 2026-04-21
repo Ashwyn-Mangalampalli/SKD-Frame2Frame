@@ -9,6 +9,8 @@ import { Calendar } from "@/components/ui/date-picker";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import Popover from "@/components/ui/popover";
+import { Combobox } from "@/components/ui/combobox";
+import { AddTeamMemberForm } from "./add-team-form";
 
 const ROLES = ["Traditional Photographer", "Traditional Videographer", "Cinematographer", "Candid Photographer", "Assistant", "Choreographer", "Director"];
 
@@ -36,6 +38,10 @@ function AddArtistExpenseForm({ eventId, onSuccess }: { eventId: string; onSucce
   const [selectedDates, setSelectedDates] = useState<Date[]>([]);
   const [totalAmount, setTotalAmount] = useState(0);
   const [advancePaid, setAdvancePaid] = useState(0);
+  
+  const [userId, setUserId] = useState("");
+  const [role, setRole] = useState("");
+  const [showAddMember, setShowAddMember] = useState(false);
 
   useEffect(() => { 
     api.team.list().then(setMembers).catch(() => {}); 
@@ -53,12 +59,9 @@ function AddArtistExpenseForm({ eventId, onSuccess }: { eventId: string; onSucce
     const currentTotal = payType === "Per Day" ? noOfDays * per_day_rate : Number(fd.get("total_amount")) || 0;
 
     const data = {
-      user_id: fd.get("user_id") as string,
-      assignment_role: fd.get("assignment_role") as string,
+      user_id: userId,
+      assignment_role: role,
       pay_type: payType,
-      // For backend compatibility, we can send the first and last date as range if needed,
-      // or we can extend the schema to support multiple dates. 
-      // For now, we'll store the date range and keep the multi-dates in mind for bulk export.
       date_start: selectedDates.length > 0 ? format(selectedDates.sort((a,b) => a.getTime() - b.getTime())[0], "yyyy-MM-dd") : null,
       date_end: selectedDates.length > 0 ? format(selectedDates.sort((a,b) => a.getTime() - b.getTime())[selectedDates.length - 1], "yyyy-MM-dd") : null,
       no_of_days: payType === "Per Day" ? noOfDays : 1,
@@ -84,22 +87,56 @@ function AddArtistExpenseForm({ eventId, onSuccess }: { eventId: string; onSucce
     }
   }
 
+  if (showAddMember) {
+    return (
+      <div className="animate-in fade-in slide-in-from-bottom-4 duration-300">
+        <div className="mb-4 text-sm text-gray-500">Creating a new team member...</div>
+        <AddTeamMemberForm 
+          onSuccess={(newMember) => {
+            if (newMember) {
+              setMembers(prev => [...prev, newMember]);
+              setUserId(newMember.id);
+            }
+            setShowAddMember(false);
+          }} 
+        />
+      </div>
+    );
+  }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="grid grid-cols-2 gap-4">
         <div>
-          <label className="mb-1.5 block text-sm font-medium text-gray-700">Team Member *</label>
-          <select name="user_id" className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500">
-            <option value="">Select...</option>
-            {members.map((m) => <option key={m.id} value={m.id}>{m.full_name}</option>)}
-          </select>
+          <div className="mb-1.5 flex items-center justify-between">
+            <label className="block text-sm font-medium text-gray-700">Team Member *</label>
+            <button
+              type="button"
+              onClick={() => setShowAddMember(true)}
+              className="flex items-center gap-1 text-xs font-medium text-brand-600 hover:text-brand-700"
+            >
+              <Plus className="h-3 w-3" />
+              New
+            </button>
+          </div>
+          <Combobox
+            value={userId}
+            onChange={setUserId}
+            options={members.map((m) => ({ label: m.full_name, value: m.id }))}
+            placeholder="Search member..."
+            onAddNew={() => setShowAddMember(true)}
+            addNewLabel="New Member"
+          />
         </div>
         <div>
           <label className="mb-1.5 block text-sm font-medium text-gray-700">Role *</label>
-          <select name="assignment_role" className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm text-gray-900 focus:border-brand-500 focus:outline-none focus:ring-1 focus:ring-brand-500">
-            <option value="">Select...</option>
-            {ROLES.map((r) => <option key={r} value={r}>{r}</option>)}
-          </select>
+          <Combobox
+            value={role}
+            onChange={setRole}
+            options={ROLES.map(r => ({ label: r, value: r }))}
+            placeholder="Select or type..."
+            freeText={true}
+          />
         </div>
       </div>
 

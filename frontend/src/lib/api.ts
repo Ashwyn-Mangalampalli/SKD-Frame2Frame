@@ -59,6 +59,8 @@ export interface EventWithFinancials {
   date_string: string;
   total_collected: number;
   client_balance: number;
+  total_expenses: number;
+  savings: number;
 }
 
 export interface ClientDetailResponse {

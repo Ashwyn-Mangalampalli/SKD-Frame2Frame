@@ -19,14 +19,20 @@ export class EventsController {
 
       const { data: events, error } = await supabase
         .from("events_master")
-        .select("*, clients_master(client_name), client_payments(amount)")
+        .select(`
+          *, 
+          clients_master(client_name), 
+          client_payments(amount),
+          artist_expenses(total_amount),
+          output_expenses(total_amount)
+        `)
         .eq("tenant_id", tenantId)
         .eq("is_active", true)
         .order("display_id");
 
       if (error) throw error;
 
-      const typedEvents = events as unknown as EventWithClient[];
+      const typedEvents = events as unknown as any[];
 
       const result = (typedEvents ?? []).map((e) => {
         const totalCollected = (e.client_payments as any[])?.reduce(
@@ -34,14 +40,30 @@ export class EventsController {
           0
         ) ?? 0;
 
+        const totalArtist = (e.artist_expenses as any[])?.reduce(
+          (sum: number, exp: any) => sum + (exp.total_amount ?? 0),
+          0
+        ) ?? 0;
+
+        const totalOutput = (e.output_expenses as any[])?.reduce(
+          (sum: number, exp: any) => sum + (exp.total_amount ?? 0),
+          0
+        ) ?? 0;
+
+        const totalExpenses = totalArtist + totalOutput;
+
         return {
           ...e,
           client_name: e.clients_master?.client_name ?? "Unknown",
           date_string: formatDates(e.event_dates ?? []),
           total_collected: totalCollected,
           client_balance: (e.package_value ?? 0) - totalCollected,
+          total_expenses: totalExpenses,
+          savings: (e.package_value ?? 0) - totalExpenses,
           clients_master: undefined,
           client_payments: undefined,
+          artist_expenses: undefined,
+          output_expenses: undefined,
         };
       });
 
