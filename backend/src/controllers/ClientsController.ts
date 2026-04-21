@@ -16,6 +16,7 @@ export class ClientsController {
         .select("*, events_master(count)")
         .eq("tenant_id", tenantId)
         .eq("is_active", true)
+        .eq("events_master.is_active", true)
         .order("display_id");
 
       if (error) throw error;
