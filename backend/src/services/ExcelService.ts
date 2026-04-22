@@ -35,7 +35,7 @@ export class ExcelService {
     XLSX.utils.book_append_sheet(wb, wsTeam, this.SHEETS.TEAM);
 
     // 3. Events
-    const eventHeaders = [["Display ID", "Client Name", "Event Type", "Venue", "City", "Package Value", "Dates"]];
+    const eventHeaders = [["Display ID", "Client Name", "Event Type", "Venue", "City", "Package Value", "Dates", "Client Balance", "Team Balance", "Status"]];
     const eventData = data?.[this.SHEETS.EVENTS] || [];
     const wsEvents = XLSX.utils.aoa_to_sheet([...eventHeaders, ...eventData]);
     XLSX.utils.book_append_sheet(wb, wsEvents, this.SHEETS.EVENTS);
@@ -47,7 +47,7 @@ export class ExcelService {
     XLSX.utils.book_append_sheet(wb, wsPayments, this.SHEETS.PAYMENTS);
 
     // 5. Artist Expenses
-    const artistHeaders = [["Event Display ID", "User Name", "Role", "Pay Type", "Days", "Rate", "Total", "Advance", "Status"]];
+    const artistHeaders = [["Event Display ID", "User Name", "Role", "Pay Type", "Start Date", "End Date", "Days", "Rate", "Total", "Advance", "Status"]];
     const artistData = data?.[this.SHEETS.ARTIST_EXPENSES] || [];
     const wsArtist = XLSX.utils.aoa_to_sheet([...artistHeaders, ...artistData]);
     XLSX.utils.book_append_sheet(wb, wsArtist, this.SHEETS.ARTIST_EXPENSES);

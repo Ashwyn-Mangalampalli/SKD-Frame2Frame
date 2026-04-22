@@ -121,7 +121,11 @@ function AddArtistExpenseForm({ eventId, onSuccess }: { eventId: string; onSucce
           </div>
           <Combobox
             value={userId}
-            onChange={setUserId}
+            onChange={(val) => {
+              setUserId(val);
+              const member = members.find(m => m.id === val);
+              if (member?.usual_role) setRole(member.usual_role);
+            }}
             options={members.map((m) => ({ label: m.full_name, value: m.id }))}
             placeholder="Search member..."
             onAddNew={() => setShowAddMember(true)}

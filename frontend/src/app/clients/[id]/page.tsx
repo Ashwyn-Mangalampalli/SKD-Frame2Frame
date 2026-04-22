@@ -97,16 +97,29 @@ export default async function ClientDetailPage({
                 href={`/events/${event.id}`}
                 className="group rounded-xl border border-gray-200 bg-white p-4 shadow-sm transition-all hover:border-brand-200 hover:shadow-md sm:p-5"
               >
-                <div>
-                  <span className={cn("inline-block rounded-full px-2.5 py-0.5 text-xs font-medium", getEventTypeColor(event.event_type))}>
-                    {event.event_type}
-                  </span>
+                  <div className="flex items-start justify-between">
+                    <span className={cn("inline-block rounded-full px-2.5 py-0.5 text-xs font-medium", getEventTypeColor(event.event_type))}>
+                      {event.event_type}
+                    </span>
+                    {event.payment_status && (
+                      <span className={cn(
+                        "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider",
+                        getPaidStatusColor(event.payment_status)
+                      )}>
+                        {event.payment_status}
+                      </span>
+                    )}
+                  </div>
                   <h3 className="mt-2 text-sm font-semibold text-gray-900 group-hover:text-brand-600 sm:text-base">
                     {event.display_id}
                   </h3>
                   <p className="mt-1 text-xs text-gray-500 sm:text-sm">{event.venue}, {event.city}</p>
-                  {event.date_string && <p className="mt-1 text-xs text-gray-500">{event.date_string}</p>}
-                </div>
+                  <div className="mt-1 flex items-center justify-between">
+                    {event.date_string && <p className="text-xs text-gray-500">{event.date_string}</p>}
+                    <span className="text-[10px] font-medium text-gray-400">
+                      Team Size: <span className="font-semibold text-gray-700">{event.team_size || 0}</span>
+                    </span>
+                  </div>
 
                 <div className="mt-3 grid grid-cols-3 gap-2 rounded-lg bg-gray-50 p-2.5 sm:mt-4 sm:gap-3 sm:p-3">
                   <div>

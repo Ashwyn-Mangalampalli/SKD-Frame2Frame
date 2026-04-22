@@ -53,7 +53,17 @@ export default async function EventDetailPage({
         <div className="px-4 py-4 sm:px-6 sm:py-5">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div>
-              <h1 className="text-lg font-bold text-gray-900 sm:text-2xl">{event.display_id}</h1>
+              <div className="flex items-center gap-3">
+                <h1 className="text-lg font-bold text-gray-900 sm:text-2xl">{event.display_id}</h1>
+                {financials.payment_status && (
+                  <span className={cn(
+                    "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider",
+                    getPaidStatusColor(financials.payment_status)
+                  )}>
+                    {financials.payment_status}
+                  </span>
+                )}
+              </div>
               <div className="mt-1.5 flex flex-wrap gap-3 sm:mt-2 sm:gap-4">
                 <div className="flex items-center gap-1.5 text-xs text-gray-500 sm:text-sm">
                   <MapPin className="h-4 w-4" /> {event.venue}, {event.city}
@@ -82,13 +92,11 @@ export default async function EventDetailPage({
         <FinanceCard label="Client Balance" value={formatCurrency(financials.client_balance)} icon={<Wallet className="h-4 w-4" />} color="amber" />
         
         <FinanceCard label="Total Expenses" value={formatCurrency(financials.total_expenses)} icon={<TrendingDown className="h-4 w-4" />} color="red" />
-        <FinanceCard label="Total Artist Expenses" value={formatCurrency(financials.total_artist_expenses)} icon={<Users className="h-4 w-4" />} color="red" />
-        <FinanceCard label="Total Output Expenses" value={formatCurrency(financials.total_output_expenses)} icon={<CreditCard className="h-4 w-4" />} color="red" />
-
         <FinanceCard label="Paid to Team" value={formatCurrency(financials.total_expenses_paid)} icon={<CreditCard className="h-4 w-4" />} color="purple" />
-        <FinanceCard label="Team Balance" value={formatCurrency(financials.vendor_balance)} icon={<Wallet className="h-4 w-4" />} color="orange" />
+        <FinanceCard label="Team Balance" value={formatCurrency(financials.team_balance)} icon={<Wallet className="h-4 w-4" />} color="orange" />
+
         <FinanceCard label="Savings" value={formatCurrency(financials.savings)} icon={<TrendingUp className="h-4 w-4" />} color="brand" />
-        <FinanceCard label="Team Size" value={(artist_expenses.length + output_expenses.length).toString()} icon={<Users className="h-4 w-4" />} color="indigo" />
+        <FinanceCard label="Team Size" value={(financials.team_size || 0).toString()} icon={<Users className="h-4 w-4" />} color="indigo" />
       </div>
 
 

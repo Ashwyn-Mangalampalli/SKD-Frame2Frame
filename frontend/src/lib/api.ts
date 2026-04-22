@@ -58,9 +58,11 @@ export interface EventWithFinancials {
   client_name: string;
   date_string: string;
   total_collected: number;
+  payment_status: string;
   client_balance: number;
   total_expenses: number;
   savings: number;
+  team_size: number;
 }
 
 export interface ClientDetailResponse {
@@ -116,13 +118,15 @@ export interface EventDetailResponse {
   }[];
   financials: {
     total_collected: number;
+    payment_status: string;
     client_balance: number;
     total_expenses: number;
     total_artist_expenses: number;
     total_output_expenses: number;
     total_expenses_paid: number;
-    vendor_balance: number;
+    team_balance: number;
     savings: number;
+    team_size: number;
   };
 }
 
@@ -179,12 +183,12 @@ export interface DashboardResponse {
   total_team_members: number;
   total_revenue: number;
   total_collected: number;
-  total_pending: number;
+  client_balance: number;
   total_expenses: number;
   total_artist_expenses: number;
   total_output_expenses: number;
   paid_to_team: number;
-  yet_to_pay_team: number;
+  team_balance: number;
   total_savings: number;
   recent_events: EventWithFinancials[];
   upcoming_dates: {

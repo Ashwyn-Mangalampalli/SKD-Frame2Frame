@@ -40,6 +40,7 @@ export async function middleware(request: NextRequest) {
   const isAuthRoute = request.nextUrl.pathname.startsWith('/api/auth') // If we add any auth-related API routes later
   const isPublicAsset = request.nextUrl.pathname.match(/\.(.*)$/) || request.nextUrl.pathname.startsWith('/_next')
 
+
   if (!user && !isLoginPage && !isAuthRoute && !isPublicAsset) {
     // No user, potentially redirect to login page
     const url = request.nextUrl.clone()

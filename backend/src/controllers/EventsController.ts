@@ -40,26 +40,31 @@ export class EventsController {
           0
         ) ?? 0;
 
-        const totalArtist = (e.artist_expenses as any[])?.reduce(
-          (sum: number, exp: any) => sum + (exp.total_amount ?? 0),
-          0
-        ) ?? 0;
+        const { status: paymentStatus, balance: clientBalance } = calcBalance(e.package_value ?? 0, totalCollected);
 
-        const totalOutput = (e.output_expenses as any[])?.reduce(
-          (sum: number, exp: any) => sum + (exp.total_amount ?? 0),
-          0
-        ) ?? 0;
+        const artistExp = e.artist_expenses as any[];
+        const outputExp = e.output_expenses as any[];
 
+        const totalArtist = artistExp?.reduce((sum: number, exp: any) => sum + (exp.total_amount ?? 0), 0) ?? 0;
+        const totalOutput = outputExp?.reduce((sum: number, exp: any) => sum + (exp.total_amount ?? 0), 0) ?? 0;
         const totalExpenses = totalArtist + totalOutput;
+
+        // Calculate unique team members
+        const uniqueMembers = new Set([
+          ...(artistExp ?? []).map(a => a.user_id),
+          ...(outputExp ?? []).map(o => o.user_id)
+        ].filter(Boolean));
 
         return {
           ...e,
           client_name: e.clients_master?.client_name ?? "Unknown",
           date_string: formatDates(e.event_dates ?? []),
           total_collected: totalCollected,
-          client_balance: (e.package_value ?? 0) - totalCollected,
+          payment_status: paymentStatus,
+          client_balance: clientBalance,
           total_expenses: totalExpenses,
           savings: (e.package_value ?? 0) - totalExpenses,
+          team_size: uniqueMembers.size,
           clients_master: undefined,
           client_payments: undefined,
           artist_expenses: undefined,
@@ -147,6 +152,14 @@ export class EventsController {
         (typedArtistExp ?? []).reduce((s, a) => s + (a.advance_paid ?? 0), 0) +
         (typedOutputExp ?? []).reduce((s, o) => s + (o.advance_paid ?? 0), 0);
 
+      const { status: paymentStatus, balance: clientBalance } = calcBalance(event.package_value ?? 0, totalCollected);
+
+      // Calculate unique team members
+      const uniqueMembers = new Set([
+        ...(typedArtistExp ?? []).map(a => a.user_id),
+        ...(typedOutputExp ?? []).map(o => o.user_id)
+      ].filter(Boolean));
+
       res.json({
         event: {
           ...event,
@@ -180,13 +193,15 @@ export class EventsController {
         }),
         financials: {
           total_collected: totalCollected,
-          client_balance: (event.package_value ?? 0) - totalCollected,
+          payment_status: paymentStatus,
+          client_balance: clientBalance,
           total_expenses: totalExpenses,
           total_artist_expenses: totalArtist,
           total_output_expenses: totalOutput,
           total_expenses_paid: totalExpPaid,
-          vendor_balance: totalExpenses - totalExpPaid,
+          team_balance: totalExpenses - totalExpPaid,
           savings: (event.package_value ?? 0) - totalExpenses,
+          team_size: uniqueMembers.size,
         },
       });
     } catch (err: any) {

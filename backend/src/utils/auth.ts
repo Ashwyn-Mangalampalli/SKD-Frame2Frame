@@ -2,6 +2,7 @@ import { supabase } from '../DB/supabase';
 import { Request, Response, NextFunction } from 'express';
 
 export const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith('Bearer ')) {

@@ -57,24 +57,42 @@ export default function EventsList({ initialEvents }: { initialEvents: EventWith
               </div>
 
               <div className="p-3.5 sm:p-4">
-                <h3 className="text-sm font-semibold text-gray-900 group-hover:text-brand-600 sm:text-base">
-                  {event.display_id}
-                </h3>
+                <div className="flex items-start justify-between">
+                  <h3 className="text-sm font-semibold text-gray-900 group-hover:text-brand-600 sm:text-base">
+                    {event.display_id}
+                  </h3>
+                  {event.payment_status && (
+                    <span className={cn(
+                      "inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider",
+                      event.payment_status === "Paid" && "bg-green-100 text-green-700",
+                      event.payment_status === "Overpaid" && "bg-emerald-100 text-emerald-700",
+                      event.payment_status === "Partial" && "bg-orange-100 text-orange-700",
+                      event.payment_status === "Unpaid" && "bg-red-100 text-red-700"
+                    )}>
+                      {event.payment_status}
+                    </span>
+                  )}
+                </div>
 
                 <div className="mt-1.5 space-y-1 sm:mt-2">
                   <div className="flex items-center gap-1.5 text-xs text-gray-500 sm:text-sm">
                     <MapPin className="h-3.5 w-3.5 flex-shrink-0" />
                     <span className="truncate">{event.venue}, {event.city}</span>
                   </div>
-                  {event.date_string && (
-                    <div className="flex items-center gap-1.5 text-xs text-gray-500 sm:text-sm">
-                      <CalendarDays className="h-3.5 w-3.5 flex-shrink-0" />
-                      <span className="truncate">{event.date_string}</span>
-                    </div>
-                  )}
+                  <div className="flex items-center justify-between">
+                    {event.date_string && (
+                      <div className="flex items-center gap-1.5 text-xs text-gray-500 sm:text-sm">
+                        <CalendarDays className="h-3.5 w-3.5 flex-shrink-0" />
+                        <span className="truncate">{event.date_string}</span>
+                      </div>
+                    )}
+                    <span className="text-[10px] font-medium text-gray-400">
+                      Team Size: <span className="font-semibold text-gray-700">{event.team_size || 0}</span>
+                    </span>
+                  </div>
                 </div>
 
-                <div className="mt-3 grid grid-cols-3 gap-2 rounded-lg bg-gray-50 p-2 sm:p-2.5">
+                <div className="mt-4 grid grid-cols-3 gap-2 rounded-lg bg-gray-50 p-2 sm:p-2.5">
                   <div>
                     <p className="text-[9px] font-medium uppercase text-gray-400 sm:text-[10px]">Package</p>
                     <p className="text-[11px] font-semibold text-gray-900 sm:text-xs">{formatCurrency(event.package_value)}</p>
