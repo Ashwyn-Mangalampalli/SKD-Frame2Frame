@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, Phone, Mail, MessageSquare, Calendar } from "lucide-react";
 import { api } from "@/lib/api";
-import { formatCurrency, getInitials, getEventTypeColor, cn } from "@/lib/utils";
+import { formatCurrency, getInitials, getEventTypeColor, getPaidStatusColor, cn } from "@/lib/utils";
 import { notFound } from "next/navigation";
 import EditClientButton from "@/components/forms/edit-client-form";
 import AddEventButton from "@/components/forms/add-event-form";
