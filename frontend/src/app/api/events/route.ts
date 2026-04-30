@@ -3,6 +3,8 @@ import { supabaseAdmin, getDefaultTenantId } from "@/lib/supabase.server";
 import { formatDates, calcBalance } from "@/lib/utils";
 import { slugify } from "@/lib/trackable-id";
 
+export const runtime = 'edge';
+
 export async function GET() {
   try {
     const tenantId = await getDefaultTenantId();

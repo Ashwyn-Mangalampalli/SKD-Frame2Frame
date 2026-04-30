@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import { api } from "@/lib/api";
 import AddClientButton from "@/components/forms/add-client-form";
 import ClientsList from "./client-list";

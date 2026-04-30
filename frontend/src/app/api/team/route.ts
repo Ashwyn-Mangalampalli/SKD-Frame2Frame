@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { supabaseAdmin, getDefaultTenantId } from "@/lib/supabase.server";
 import { slugify } from "@/lib/trackable-id";
 
+export const runtime = 'edge';
+
 function groupExpenses(
   rows: { user_id: string; total_amount: number; advance_paid: number }[]
 ): Record<string, { earnings: number; paid: number; count: number }> {

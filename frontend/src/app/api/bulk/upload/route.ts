@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { ExcelService } from "@/lib/excel.server";
 import { supabaseAdmin, getDefaultTenantId } from "@/lib/supabase.server";
 
+export const runtime = 'edge';
+
 export async function POST(request: Request) {
   try {
     const formData = await request.formData();

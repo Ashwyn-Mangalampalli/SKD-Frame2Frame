@@ -1,5 +1,7 @@
 'use client'
 
+export const runtime = 'edge';
+
 import { useEffect, useState } from 'react'
 import { Hammer, Clock, AlertTriangle, Loader2 } from 'lucide-react'
 import { api } from '@/lib/api'

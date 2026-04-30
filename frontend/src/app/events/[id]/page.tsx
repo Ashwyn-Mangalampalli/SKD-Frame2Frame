@@ -1,5 +1,7 @@
 // Triggering fresh sync to mirror
 import Link from "next/link";
+
+export const runtime = 'edge';
 import {
   ArrowLeft, MapPin, CalendarDays,
   IndianRupee, TrendingUp, TrendingDown,

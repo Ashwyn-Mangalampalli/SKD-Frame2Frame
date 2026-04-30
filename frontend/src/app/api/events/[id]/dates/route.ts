@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin, getDefaultTenantId } from "@/lib/supabase.server";
 
+export const runtime = 'edge';
+
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ id: string }> }

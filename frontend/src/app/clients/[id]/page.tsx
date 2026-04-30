@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, Phone, Mail, MessageSquare, Calendar } from "lucide-react";
+
+export const runtime = 'edge';
 import { api } from "@/lib/api";
 import { formatCurrency, getInitials, getEventTypeColor, getPaidStatusColor, cn } from "@/lib/utils";
 import { notFound } from "next/navigation";

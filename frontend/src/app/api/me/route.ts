@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabase.server";
 
+export const runtime = 'edge';
+
 export async function GET(request: Request) {
   try {
     const authHeader = request.headers.get("authorization");

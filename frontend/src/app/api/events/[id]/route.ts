@@ -3,6 +3,8 @@ import { supabaseAdmin, getDefaultTenantId } from "@/lib/supabase.server";
 import { formatDates, calcBalance } from "@/lib/utils";
 import { isUUID } from "@/lib/trackable-id";
 
+export const runtime = 'edge';
+
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }

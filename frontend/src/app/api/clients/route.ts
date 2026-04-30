@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { supabaseAdmin, getDefaultTenantId } from "@/lib/supabase.server";
 import { slugify } from "@/lib/trackable-id";
 
+export const runtime = 'edge';
+
 export async function GET() {
   try {
     const tenantId = await getDefaultTenantId();

@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { ExcelService } from "@/lib/excel.server";
 
+export const runtime = 'edge';
+
 export async function GET() {
   try {
     const buffer = ExcelService.generateMasterFile();

@@ -1,4 +1,6 @@
 import Link from "next/link";
+
+export const runtime = 'edge';
 import {
   ArrowLeft, Phone, MessageSquare,
   IndianRupee, TrendingUp, Wallet, Briefcase,

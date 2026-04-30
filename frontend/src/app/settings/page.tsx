@@ -1,5 +1,7 @@
 "use client";
 
+export const runtime = 'edge';
+
 import React, { useState, useEffect } from "react";
 import { api, TenantResponse } from "@/lib/api";
 import LogoUpload from "@/components/ui/logo-upload";

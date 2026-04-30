@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import { api } from "@/lib/api";
 import AddTeamMemberButton from "@/components/forms/add-team-form";
 import TeamList from "./team-list";

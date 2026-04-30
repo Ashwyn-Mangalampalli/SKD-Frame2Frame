@@ -3,6 +3,8 @@ import { ExcelService } from "@/lib/excel.server";
 import { supabaseAdmin, getDefaultTenantId } from "@/lib/supabase.server";
 import { calcBalance } from "@/lib/utils";
 
+export const runtime = 'edge';
+
 export async function GET() {
   try {
     const tenantId = await getDefaultTenantId();

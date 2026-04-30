@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import { api } from "@/lib/api";
 import AddEventButton from "@/components/forms/add-event-form";
 import EventsList from "./events-list";
