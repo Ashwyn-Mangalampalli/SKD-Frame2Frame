@@ -1,9 +1,7 @@
 name: Sync to SKD Photo Studio's Frame2Frame
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch: # Mandatory Manual Gate
 
 jobs:
   repo-sync:
