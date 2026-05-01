@@ -4,10 +4,10 @@ compatibility_flags = ["nodejs_compat"]
 
 pages_build_output_dir = "frontend/.vercel/output/static"
 
-# Cloudflare R2 Buckets (Image Hosting)
-[[r2_buckets]]
-binding = "PHOTO_ASSETS"
-bucket_name = "skd-photo-assets"
-
+# Cloudflare R2 Buckets (Image Hosting) - Commented out until implemented in roadmap
+# [[r2_buckets]]
+# binding = "PHOTO_ASSETS"
+# bucket_name = "skd-photo-assets"
 
 # Environment Variables should be managed via the Cloudflare Dashboard for security.
+
