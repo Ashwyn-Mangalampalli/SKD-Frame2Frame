@@ -1,4 +1,4 @@
-# 🚀 AntiGravity Project Overview
+# 🚀 AntiGravity Project Overview: Frame2Frame
 
 ## 📌 Mission
 **Frame2Frame** is a premium, state-of-the-art Studio Management System specifically designed for **SKD Photo Studio**. It automates client management, event tracking, team coordination, and financial analysis in a single, high-performance web interface.
@@ -44,5 +44,5 @@
 
 ### ⚠️ Git Workflow Rules
 > [!IMPORTANT]
-> - **Development Repo** (`origin` - `Ashwyn-Mangalampalli/SKD-Frame2Frame`): IDE will always ask for confirmation before pushing.
-> - **Production Repo** (`mirror` - `SKD-Photo-Studio/Frame2Frame`): IDE will always ask for confirmation before triggering the production build.
+> - **Development Repo** (`origin` - `Ashwyn-Mangalampalli/SKD-Frame2Frame`): AntiGravity (you) will always ask human (me) for confirmation before pushing.
+> - **Production Repo** (`mirror` - `SKD-Photo-Studio/Frame2Frame`): AntiGravity (you) will always ask human (me) for confirmation before triggering the production build.

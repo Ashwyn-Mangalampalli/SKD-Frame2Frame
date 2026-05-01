@@ -51,7 +51,11 @@ async function fetchAPI<T>(endpoint: string, options?: RequestInit & { token?: s
   if (typeof window === 'undefined') {
     try {
       const { cookies } = await import('next/headers');
-      headers["Cookie"] = (await cookies()).toString();
+      const cookieStore = await cookies();
+      const cookieStr = cookieStore.getAll().map(c => `${c.name}=${c.value}`).join('; ');
+      if (cookieStr) {
+        headers["Cookie"] = cookieStr;
+      }
     } catch {
       // Not in a request context (e.g. build time)
     }
