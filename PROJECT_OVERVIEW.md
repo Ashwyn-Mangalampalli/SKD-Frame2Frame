@@ -1,4 +1,4 @@
-# 🚀 Frame2Frame: Project Overview & Context
+# 🚀 AntiGravity Project Overview
 
 ## 📌 Mission
 **Frame2Frame** is a premium, state-of-the-art Studio Management System specifically designed for **SKD Photo Studio**. It automates client management, event tracking, team coordination, and financial analysis in a single, high-performance web interface.
@@ -34,7 +34,7 @@
 - `src/lib`: Core utilities (api client, supabase config, helper functions).
 - `src/styles`: Global CSS and theme variables.
 
-## 🚀 Deployment Status
+## 🚀 Deployment & Git Protocols
 - **Platform**: Cloudflare Pages.
 - **Migration Note**: All routes have been explicitly moved to the **Edge Runtime** to ensure compatibility with Cloudflare's serverless infrastructure and avoid build failures.
 - **Environment Variables**:
@@ -42,8 +42,7 @@
   - `NEXT_PUBLIC_MAINTENANCE_MODE`: Operational toggle.
   - `GOOGLE_AI_STUDIO_API_KEY`: For AI-enhanced features.
 
-## 🧠 For Antigravity Gemini
-- **Source of Truth**: Always refer to `GEMINI.md` for core conventions.
-- **Security**: Never expose `.env.local`.
-- **Performance**: Ensure any new routes or APIs use `export const runtime = 'edge';`.
-- **Aesthetics**: Maintain the premium visual standard established in the project.
+### ⚠️ Git Workflow Rules
+> [!IMPORTANT]
+> - **Development Repo** (`origin` - `Ashwyn-Mangalampalli/SKD-Frame2Frame`): IDE will always ask for confirmation before pushing.
+> - **Production Repo** (`mirror` - `SKD-Photo-Studio/Frame2Frame`): IDE will always ask for confirmation before triggering the production build.
