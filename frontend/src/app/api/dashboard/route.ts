@@ -122,6 +122,22 @@ export async function GET() {
       upcoming_events:    upcomingEvents,
     });
   } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    console.error("Dashboard error:", err);
+    return NextResponse.json({
+      total_clients:      0,
+      total_events:       0,
+      total_team_members: 0,
+      total_revenue:      0,
+      total_collected:    0,
+      client_balance:     0,
+      total_expenses:     0,
+      total_artist_expenses: 0,
+      total_output_expenses: 0,
+      paid_to_team:       0,
+      team_balance:       0,
+      total_savings:      0,
+      recent_events:      [],
+      upcoming_events:    [],
+    });
   }
 }
