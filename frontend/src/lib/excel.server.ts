@@ -52,8 +52,8 @@ export class ExcelService {
     return XLSX.write(wb, { type: "buffer", bookType: "xlsx" });
   }
 
-  static parseUploadedFile(buffer: Buffer) {
-    const wb = XLSX.read(buffer, { type: "buffer" });
+  static parseUploadedFile(data: any) {
+    const wb = XLSX.read(data, { type: "array" });
     const result: { [sheetName: string]: any[] } = {};
 
     wb.SheetNames.forEach((name) => {

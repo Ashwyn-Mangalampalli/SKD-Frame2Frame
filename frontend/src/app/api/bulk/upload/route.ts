@@ -12,8 +12,7 @@ export async function POST(request: Request) {
 
     const tenantId = await getDefaultTenantId();
     const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-    const sheets = ExcelService.parseUploadedFile(buffer);
+    const sheets = ExcelService.parseUploadedFile(arrayBuffer);
     const stats = { clients: 0, team: 0, events: 0, payments: 0, artistExpenses: 0, outputExpenses: 0 };
 
     // 1. Process Team
